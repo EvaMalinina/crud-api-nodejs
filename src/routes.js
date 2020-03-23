@@ -26,7 +26,10 @@ export default class Routes extends Component {
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/notes" component={Auth(Notes)} />
+          {/* <Route path="/notes" component={Auth(Notes)} /> */}
+          <Route path="/notes">
+            <Notes/>
+          </Route>
         </Switch>
       </Router>   
     );
