@@ -2,14 +2,22 @@ import React, { Component } from 'react';
 
 export default class AddForm extends Component {
 
-  state = {
-    label: ''
-  };
+  constructor(note) {
+    super();
+    //Set default value
+    this.state = {
+      label: '',
+      done: false,
+      id: ''
+    }
 
-  onLabelChange = (e) => {
+    this.onLabelChange = this.onLabelChange.bind(this);
+  }
+
+  onLabelChange(evt) {
     this.setState({
-      label: e.target.value
-    })
+      label: evt.target.value
+    });
   };
 
   onSubmit = (e) => {
@@ -32,9 +40,11 @@ export default class AddForm extends Component {
               value={this.state.label}
         >
         </input>
-        <button 
-          className="add__btn"
-        >Add task</button>
+        <button type="submit" 
+                className="add__btn"
+        >
+          Add task
+        </button>
       </form>
     )
   }

@@ -7,11 +7,14 @@ export default class Notes extends Component {
 
   maxId = 100;
 
-  state = {
-    todoData: [
-      this.createItem('Example of the note')
-    ]
-  };
+  constructor() {
+    super();
+    this.state = {
+      todoData: [
+        this.createItem('Example of the note')
+      ]
+    }
+  }
 
   createItem(label) {
     return {
@@ -36,11 +39,16 @@ export default class Notes extends Component {
       }
       
     })
+
+    fetch('http://localhost:8082/api/notes' + id, {
+      method: 'DELETE',
+    })
+    .then(res => res.json());
   };
 
-  addItem = (text) => {
-    
-    const newItem = this.createItem(text);
+  addItem = (label) => {
+
+    const newItem = this.createItem(label);
 
     this.setState(({ todoData }) => {
       
@@ -53,6 +61,28 @@ export default class Notes extends Component {
         todoData: newArr
       }
     })
+    
+  
+    fetch('http://localhost:8082/api/notes', {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        console.log('Note added');
+      } else {
+        const error = new Error(res.error);
+        throw error;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Add note error please try again');
+    });
+   
   };
 
   toggleProperty( arr, id, propName) {
@@ -104,10 +134,3 @@ export default class Notes extends Component {
     )
   }
 };
-
-
-  // type="text"
-  // name="todo" 
-  // placeholder="your todo" 
-  // value={this.state.todo}
-  // onChange={this.checkInputValue}>
