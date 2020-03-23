@@ -17,7 +17,9 @@ export default function Auth(ComponentToProtect) {
       fetch('/checkToken')
         .then(res => {
           if (res.status === 200) {
+            
             this.setState({ loading: false });
+            this.props.history.push('/notes');
           } else {
             const error = new Error(res.error);
             throw error;
@@ -41,4 +43,4 @@ export default function Auth(ComponentToProtect) {
       return <ComponentToProtect {...this.props} />;
     }
   }
-}
+};

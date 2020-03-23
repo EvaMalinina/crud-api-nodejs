@@ -1,32 +1,41 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { withRouter } from 'react-router';
 
-export default class Login extends Component {
+class Login extends Component {
 
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
-      message: 'Loading...',
       email : '',
       password: ''
     };
-  }
+
+    this.checkInputValue = this.checkInputValue.bind(this);
+    this.checkPasswordValue = this.checkPasswordValue.bind(this);
+  };
 
   componentDidMount() {
     //GET message from server using fetch api
     fetch('/api/login')
       .then(res => res.text())
       .then(res => this.setState({message: res}));
-  }
-  
-  handleInputChange = (event) => {
-    const { value, name } = event.target;
+  };
+
+  checkInputValue(evt) {
     this.setState({
-      [name]: value
+      email: evt.target.value
     });
-  }
+  };
+
+  checkPasswordValue(evt) {
+    this.setState({
+      password: evt.target.value
+    });
+  };
 
   onSubmit = (event) => {
+    const { history } = this.props;
+
     event.preventDefault();
     fetch('/api/authenticate', {
       method: 'POST',
@@ -37,7 +46,7 @@ export default class Login extends Component {
     })
     .then(res => {
       if (res.status === 200) {
-        this.props.history.push('/');
+        history.push('/notes');
       } else {
         const error = new Error(res.error);
         throw error;
@@ -62,8 +71,7 @@ export default class Login extends Component {
               placeholder="your email" 
               id="log-name"
               value={this.state.email}
-              onChange={ this.handleInputChange }
-              required>
+              onChange={this.checkInputValue}>
             </input>
             <label htmlFor="log-pass">Create password</label>
             <input 
@@ -72,15 +80,14 @@ export default class Login extends Component {
               placeholder="password" 
               id="log-pass"
               value={this.state.password}
-              onChange={this.handleInputChange}> 
+              onChange={this.checkPasswordValue}>
             </input>
-            <Link to="/notes">
-              <button type="submit" value="Submit">Sign in</button>
-            </Link>
+            <button type="submit">Sign in</button>
           </form>
         </div>
-    
       </div>
     );
   }
 };
+
+export default withRouter(Login);
